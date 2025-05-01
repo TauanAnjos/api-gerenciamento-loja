@@ -1,5 +1,8 @@
 package com.tauan.teste_tecnico.api_gerenciamento_loja.models;
 
+import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ProdutoDtoRequest;
+import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ProdutoDtoResponse;
+import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -70,4 +73,23 @@ public class ProdutosModel {
     public void setValor(Double valor) {
         this.valor = valor;
     }
+    @PrePersist
+    public void prePersist() {
+        this.dataCriacaoCadastro = LocalDateTime.now();
+    }
+    public ProdutoDtoResponse toDtoResponse() {
+        return new ProdutoDtoResponse(
+                this.id,
+                this.nome,
+                this.dataCriacaoCadastro,
+                this.estoque,
+                this.valor
+        );
+    }
+    public void updateFromDto(ProdutoDtoRequest dto){
+        this.nome = dto.nome().toUpperCase();
+        this.estoque = dto.estoque();
+        this.valor = dto.valor();
+    }
+
 }
