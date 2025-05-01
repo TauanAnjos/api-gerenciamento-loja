@@ -1,5 +1,7 @@
 package com.tauan.teste_tecnico.api_gerenciamento_loja.services;
 
+import com.tauan.teste_tecnico.api_gerenciamento_loja.exceptions.BusinessRuleException;
+import com.tauan.teste_tecnico.api_gerenciamento_loja.exceptions.NotFoundException;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.models.ProdutosModel;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.repositories.ProdutosRepository;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ProdutoDtoRequest;
@@ -40,13 +42,13 @@ public class ProdutosService {
             produtoExist = produtosRepository.findByNome(nome.toUpperCase());
         }
         else {
-            throw new RuntimeException("Informe pelo menos um parâmetro: id ou nome");
+            throw new BusinessRuleException("Informe pelo menos um parâmetro: id ou nome");
         }
-        return produtoExist.map(ProdutosModel::toDtoResponse).orElseThrow(() -> new RuntimeException("Produto não encontrado."));
+        return produtoExist.map(ProdutosModel::toDtoResponse).orElseThrow(() -> new NotFoundException("Produto não encontrado."));
     }
 
     public ProdutoDtoResponse atualizarProduto(UUID id, ProdutoDtoRequest produtoDtoRequest){
-        ProdutosModel produtoExist = produtosRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado."));
+        ProdutosModel produtoExist = produtosRepository.findById(id).orElseThrow(() -> new NotFoundException("Produto não encontrado."));
 
         produtoExist.updateFromDto(produtoDtoRequest);
 
@@ -55,7 +57,7 @@ public class ProdutosService {
     }
 
     public void deletarProduto(UUID id){
-        ProdutosModel produtoExist = produtosRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        ProdutosModel produtoExist = produtosRepository.findById(id).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
         produtosRepository.deleteById(id);
     }
 }

@@ -1,5 +1,8 @@
 package com.tauan.teste_tecnico.api_gerenciamento_loja.services;
 
+import com.tauan.teste_tecnico.api_gerenciamento_loja.exceptions.BusinessRuleException;
+import com.tauan.teste_tecnico.api_gerenciamento_loja.exceptions.DataConflictException;
+import com.tauan.teste_tecnico.api_gerenciamento_loja.exceptions.NotFoundException;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.models.VendedorModel;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.repositories.VendedorRepository;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoRequest;
@@ -19,7 +22,7 @@ public class VendedorService {
 
     public VendedorDtoResponse cadastrarVendedor(VendedorDtoRequest vendedorDtoRequest){
         if (vendedorRepository.existsByNome(vendedorDtoRequest.nome())){
-            throw new RuntimeException("Vendedor já cadastrado");
+            throw new DataConflictException("Vendedor já cadastrado");
         }
         VendedorModel vendedorSalvo = vendedorRepository.save(vendedorDtoRequest.toModel());
 
@@ -35,14 +38,14 @@ public class VendedorService {
             vendedorExist = vendedorRepository.findByNome(nome.toUpperCase());
         }
         else {
-            throw new RuntimeException("Informe pelo menos um parâmetro: id ou nome");
+            throw new BusinessRuleException("Informe pelo menos um parâmetro: id ou nome");
         }
 
-        return vendedorExist.map(VendedorModel::toDtoResponse).orElseThrow(() -> new RuntimeException("Vendedor não encontrado."));
+        return vendedorExist.map(VendedorModel::toDtoResponse).orElseThrow(() -> new NotFoundException("Vendedor não encontrado."));
     }
 
     public VendedorDtoResponse atualizarVendedor(UUID id, VendedorDtoRequest vendedorDtoRequest){
-        VendedorModel vendedorExist = vendedorRepository.findById(id).orElseThrow(() -> new RuntimeException("Vendedor não encontrado."));
+        VendedorModel vendedorExist = vendedorRepository.findById(id).orElseThrow(() -> new NotFoundException("Vendedor não encontrado."));
 
         vendedorExist.updateFromDto(vendedorDtoRequest);
 
@@ -52,7 +55,7 @@ public class VendedorService {
     }
 
     public void deletarVendedor(UUID id){
-        VendedorModel vendedorExist = vendedorRepository.findById(id).orElseThrow(() -> new RuntimeException("Vendedor não encontrado."));
+        VendedorModel vendedorExist = vendedorRepository.findById(id).orElseThrow(() -> new NotFoundException("Vendedor não encontrado."));
         vendedorRepository.deleteById(id);
     }
 }
