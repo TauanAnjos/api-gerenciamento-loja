@@ -3,6 +3,7 @@ package com.tauan.teste_tecnico.api_gerenciamento_loja.rest.controllers;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoRequest;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoResponse;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.services.VendedorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class VendedorController {
     private VendedorService vendedorService;
 
     @PostMapping
-    public ResponseEntity<VendedorDtoResponse> cadastrarVendedor(@RequestBody VendedorDtoRequest vendedorDtoRequest){
+    public ResponseEntity<VendedorDtoResponse> cadastrarVendedor(@RequestBody @Valid VendedorDtoRequest vendedorDtoRequest){
         VendedorDtoResponse response = vendedorService.cadastrarVendedor(vendedorDtoRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -32,7 +33,7 @@ public class VendedorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VendedorDtoResponse> atualizarVendedor(@PathVariable("id")UUID id, VendedorDtoRequest vendedorDtoRequest){
+    public ResponseEntity<VendedorDtoResponse> atualizarVendedor(@PathVariable("id")UUID id,@RequestBody @Valid VendedorDtoRequest vendedorDtoRequest){
         VendedorDtoResponse response = vendedorService.atualizarVendedor(id, vendedorDtoRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

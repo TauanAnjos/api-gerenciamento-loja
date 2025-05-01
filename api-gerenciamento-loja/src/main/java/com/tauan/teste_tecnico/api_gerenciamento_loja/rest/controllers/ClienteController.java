@@ -4,6 +4,7 @@ import com.tauan.teste_tecnico.api_gerenciamento_loja.models.ClienteModel;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoRequest;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoResponse;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.services.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteDtoResponse> cadastrarCliente(@RequestBody ClienteDtoRequest clienteDtoRequest){
+    public ResponseEntity<ClienteDtoResponse> cadastrarCliente(@RequestBody @Valid ClienteDtoRequest clienteDtoRequest){
         ClienteDtoResponse response = clienteService.cadastrarCliente(clienteDtoRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -33,7 +34,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDtoResponse> atualizarCliente(@PathVariable("id")UUID id, ClienteDtoRequest clienteDtoRequest){
+    public ResponseEntity<ClienteDtoResponse> atualizarCliente(@PathVariable("id")UUID id,@RequestBody @Valid ClienteDtoRequest clienteDtoRequest){
         ClienteDtoResponse response = clienteService.atualizarCliente(id, clienteDtoRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
