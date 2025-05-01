@@ -3,10 +3,12 @@ package com.tauan.teste_tecnico.api_gerenciamento_loja.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -36,4 +38,19 @@ public class ControllerExceptionHandler {
                 request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        List<String> messages = exception.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> fieldError.getDefaultMessage())
+                .collect(Collectors.toList());
+        StandardError error = new StandardError(
+                System.currentTimeMillis(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Erro de validação",
+                messages,
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 }
