@@ -1,5 +1,6 @@
 package com.tauan.teste_tecnico.api_gerenciamento_loja.models;
 
+import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoResponse;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -68,5 +69,9 @@ public class ClienteModel {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public ClienteDtoResponse toDtoResponse(){
+        return new ClienteDtoResponse(this.id, this.nome,this.email,this.cpf);
     }
 }
