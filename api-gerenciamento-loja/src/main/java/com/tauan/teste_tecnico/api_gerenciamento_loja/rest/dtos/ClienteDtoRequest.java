@@ -9,6 +9,6 @@ public record ClienteDtoRequest(
         String senha
 ) {
     public ClienteModel toModel(){
-        return new ClienteModel(null, nome, email, cpf, senha);
+        return new ClienteModel(null, nome.toUpperCase(), email.toUpperCase(), cpf.toUpperCase(), senha);
     }
 }

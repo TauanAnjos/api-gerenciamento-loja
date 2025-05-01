@@ -32,7 +32,7 @@ public class ClienteService {
         if (id != null){
             clienteExist = clienteRepository.findById(id);
         } else if (email != null) {
-            clienteExist = clienteRepository.findByEmail(email);
+            clienteExist = clienteRepository.findByEmail(email.toUpperCase());
         } else if (cpf != null) {
             clienteExist = clienteRepository.findByCpf(cpf);
         }
@@ -42,10 +42,10 @@ public class ClienteService {
         return clienteExist.map(ClienteModel::toDtoResponse).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
 
-    public ClienteDtoResponse atualziarCliente(UUID id, ClienteDtoRequest clienteDtoRequest){
+    public ClienteDtoResponse atualizarCliente(UUID id, ClienteDtoRequest clienteDtoRequest){
         ClienteModel clienteExist = clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado."));
 
-        BeanUtils.copyProperties(clienteDtoRequest, clienteExist);
+        clienteExist.updateFromDto(clienteDtoRequest);
 
         ClienteModel clienteAtualizado = clienteRepository.save(clienteExist);
         return clienteAtualizado.toDtoResponse();

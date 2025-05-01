@@ -19,4 +19,55 @@ public class ProdutosModel {
     private Integer estoque;
     @Column(nullable = false)
     private Double valor;
+
+    public ProdutosModel() {
+    }
+
+    public ProdutosModel(UUID id, String nome, LocalDateTime dataCriacaoCadastro, Integer estoque, Double valor) {
+        this.id = id;
+        this.nome = nome;
+        this.dataCriacaoCadastro = dataCriacaoCadastro;
+        this.estoque = estoque;
+        this.valor = valor;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public LocalDateTime getDataCriacaoCadastro() {
+        return dataCriacaoCadastro;
+    }
+
+    public void setDataCriacaoCadastro(LocalDateTime dataCriacaoCadastro) {
+        this.dataCriacaoCadastro = dataCriacaoCadastro;
+    }
+
+    public Integer getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(Integer estoque) {
+        this.estoque = estoque;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
 }

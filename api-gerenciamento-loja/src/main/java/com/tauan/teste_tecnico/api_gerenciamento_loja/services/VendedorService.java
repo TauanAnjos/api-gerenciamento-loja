@@ -32,7 +32,7 @@ public class VendedorService {
         if (id != null){
             vendedorExist = vendedorRepository.findById(id);
         } else if (nome != null) {
-            vendedorExist = vendedorRepository.findByNome(nome);
+            vendedorExist = vendedorRepository.findByNome(nome.toUpperCase());
         }
         else {
             throw new RuntimeException("Informe pelo menos um parâmetro: id ou nome");
@@ -44,7 +44,7 @@ public class VendedorService {
     public VendedorDtoResponse atualizarVendedor(UUID id, VendedorDtoRequest vendedorDtoRequest){
         VendedorModel vendedorExist = vendedorRepository.findById(id).orElseThrow(() -> new RuntimeException("Vendedor não encontrado."));
 
-        BeanUtils.copyProperties(vendedorDtoRequest, vendedorExist);
+        vendedorExist.updateFromDto(vendedorDtoRequest);
 
         VendedorModel vendedorAtualizado = vendedorRepository.save(vendedorExist);
 

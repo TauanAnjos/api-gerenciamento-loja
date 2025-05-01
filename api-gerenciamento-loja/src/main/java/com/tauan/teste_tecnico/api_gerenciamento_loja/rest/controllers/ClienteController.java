@@ -34,13 +34,13 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDtoResponse> atualizarCliente(@PathVariable("id")UUID id, ClienteDtoRequest clienteDtoRequest){
-        ClienteDtoResponse response = clienteService.atualziarCliente(id, clienteDtoRequest);
+        ClienteDtoResponse response = clienteService.atualizarCliente(id, clienteDtoRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarCliente(@PathVariable("id")UUID id){
         clienteService.deletarCliente(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente deletado com sucesso.");
+        return ResponseEntity.status(HttpStatus.OK).body("Cliente deletado com sucesso.");
     }
 }

@@ -1,5 +1,6 @@
 package com.tauan.teste_tecnico.api_gerenciamento_loja.models;
 
+import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoRequest;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoResponse;
 import jakarta.persistence.*;
 
@@ -61,6 +62,12 @@ public class VendedorModel {
     }
 
     public VendedorDtoResponse toDtoResponse(){
-        return new VendedorDtoResponse(this.nome,this.email);
+        return new VendedorDtoResponse(this.id, this.nome,this.email);
+    }
+
+    public void updateFromDto(VendedorDtoRequest dto){
+        this.nome = dto.nome().toUpperCase();
+        this.email = dto.email().toUpperCase();
+        this.senha = dto.senha();
     }
 }

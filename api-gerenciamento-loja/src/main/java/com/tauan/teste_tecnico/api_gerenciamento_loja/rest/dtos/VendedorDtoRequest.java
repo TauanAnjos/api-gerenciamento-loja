@@ -8,6 +8,6 @@ public record VendedorDtoRequest(
         String senha
 ) {
     public VendedorModel toModel(){
-        return new VendedorModel(null, nome, email, senha);
+        return new VendedorModel(null, nome.toUpperCase(), email.toUpperCase(), senha);
     }
 }

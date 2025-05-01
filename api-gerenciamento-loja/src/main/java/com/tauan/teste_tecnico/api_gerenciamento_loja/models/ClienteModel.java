@@ -1,5 +1,6 @@
 package com.tauan.teste_tecnico.api_gerenciamento_loja.models;
 
+import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoRequest;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoResponse;
 import jakarta.persistence.*;
 
@@ -73,5 +74,11 @@ public class ClienteModel {
 
     public ClienteDtoResponse toDtoResponse(){
         return new ClienteDtoResponse(this.id, this.nome,this.email,this.cpf);
+    }
+    public void updateFromDto(ClienteDtoRequest dto){
+        this.nome = dto.nome().toUpperCase();
+        this.email = dto.email().toUpperCase();
+        this.cpf = dto.cpf();
+        this.senha = dto.senha();
     }
 }
