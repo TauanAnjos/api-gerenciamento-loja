@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api_java:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - gerenciamento-network
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    networks:
+      - gerenciamento-network
+    environment:
+      MYSQL_DATABASE: gerenciamento_loja
+      MYSQL_ROOT_PASSWORD: 1234
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-u", "root", "-p$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+volumes:
+  mysql_data:
+
+networks:
+  gerenciamento-network:
+    driver: bridge
