@@ -9,6 +9,7 @@ import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoReques
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
+    @Transactional
     public ClienteDtoResponse cadastrarCliente(ClienteDtoRequest clienteDtoRequest){
         if(clienteRepository.existsByCpf(clienteDtoRequest.cpf())){
             throw new DataConflictException("CPF já cadastrado.");
@@ -27,7 +28,7 @@ public class ClienteService {
 
         return clienteSalvo.toDtoResponse();
     }
-
+    @Transactional
     public ClienteDtoResponse buscarCliente(UUID id, String email, String cpf){
         Optional<ClienteModel> clienteExist = Optional.empty();
 
@@ -43,7 +44,7 @@ public class ClienteService {
         }
         return clienteExist.map(ClienteModel::toDtoResponse).orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
     }
-
+    @Transactional
     public ClienteDtoResponse atualizarCliente(UUID id, ClienteDtoRequest clienteDtoRequest){
         ClienteModel clienteExist = clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
@@ -52,7 +53,7 @@ public class ClienteService {
         ClienteModel clienteAtualizado = clienteRepository.save(clienteExist);
         return clienteAtualizado.toDtoResponse();
     }
-
+    @Transactional
     public void deletarCliente(UUID id){
         ClienteModel clienteExist = clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
         clienteRepository.deleteById(id);

@@ -8,6 +8,7 @@ import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ProdutoDtoReques
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ProdutoDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,7 +18,7 @@ public class ProdutosService {
 
     @Autowired
     private ProdutosRepository produtosRepository;
-
+    @Transactional
     public ProdutoDtoResponse cadastrarProduto(ProdutoDtoRequest produtoDtoRequest){
         Optional<ProdutosModel> produtoExistente = produtosRepository.findByNome(produtoDtoRequest.nome().toUpperCase());
 
@@ -32,7 +33,7 @@ public class ProdutosService {
         ProdutosModel produtoSalvo = produtosRepository.save(produtosModel);
         return produtoSalvo.toDtoResponse();
     }
-
+    @Transactional
     public ProdutoDtoResponse buscarProduto(UUID id, String nome){
         Optional<ProdutosModel> produtoExist = Optional.empty();
 
@@ -46,7 +47,7 @@ public class ProdutosService {
         }
         return produtoExist.map(ProdutosModel::toDtoResponse).orElseThrow(() -> new NotFoundException("Produto não encontrado."));
     }
-
+    @Transactional
     public ProdutoDtoResponse atualizarProduto(UUID id, ProdutoDtoRequest produtoDtoRequest){
         ProdutosModel produtoExist = produtosRepository.findById(id).orElseThrow(() -> new NotFoundException("Produto não encontrado."));
 
@@ -55,7 +56,7 @@ public class ProdutosService {
         ProdutosModel produtoAtualizado = produtosRepository.save(produtoExist);
         return produtoAtualizado.toDtoResponse();
     }
-
+    @Transactional
     public void deletarProduto(UUID id){
         ProdutosModel produtoExist = produtosRepository.findById(id).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
         produtosRepository.deleteById(id);

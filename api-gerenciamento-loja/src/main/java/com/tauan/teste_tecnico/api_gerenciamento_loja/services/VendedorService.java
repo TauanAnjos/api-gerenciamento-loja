@@ -10,6 +10,7 @@ import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoRespo
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class VendedorService {
 
     @Autowired
     private VendedorRepository vendedorRepository;
-
+    @Transactional
     public VendedorDtoResponse cadastrarVendedor(VendedorDtoRequest vendedorDtoRequest){
         if (vendedorRepository.existsByNome(vendedorDtoRequest.nome())){
             throw new DataConflictException("Vendedor já cadastrado");
@@ -28,7 +29,7 @@ public class VendedorService {
 
         return vendedorSalvo.toDtoResponse();
     }
-
+    @Transactional
     public VendedorDtoResponse buscarVendedor(UUID id, String nome){
         Optional<VendedorModel> vendedorExist = Optional.empty();
 
@@ -43,7 +44,7 @@ public class VendedorService {
 
         return vendedorExist.map(VendedorModel::toDtoResponse).orElseThrow(() -> new NotFoundException("Vendedor não encontrado."));
     }
-
+    @Transactional
     public VendedorDtoResponse atualizarVendedor(UUID id, VendedorDtoRequest vendedorDtoRequest){
         VendedorModel vendedorExist = vendedorRepository.findById(id).orElseThrow(() -> new NotFoundException("Vendedor não encontrado."));
 
@@ -53,7 +54,7 @@ public class VendedorService {
 
         return vendedorAtualizado.toDtoResponse();
     }
-
+    @Transactional
     public void deletarVendedor(UUID id){
         VendedorModel vendedorExist = vendedorRepository.findById(id).orElseThrow(() -> new NotFoundException("Vendedor não encontrado."));
         vendedorRepository.deleteById(id);
