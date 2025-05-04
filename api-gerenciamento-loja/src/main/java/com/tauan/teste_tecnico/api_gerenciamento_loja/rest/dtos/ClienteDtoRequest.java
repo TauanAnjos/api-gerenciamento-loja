@@ -11,6 +11,6 @@ public record ClienteDtoRequest(
         @NotBlank(message = "A senha é obrigatoria")String senha
 ) {
     public ClienteModel toModel(){
-        return new ClienteModel(null, nome.toUpperCase(), email.toUpperCase(), cpf.toUpperCase(), senha);
+        return new ClienteModel(null, nome.toUpperCase(), email, cpf.toUpperCase(), senha);
     }
 }

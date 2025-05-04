@@ -1,13 +1,17 @@
--- Criação das tabelas
-CREATE TABLE IF NOT EXISTS tb_cliente (
+CREATE TABLE IF NOT EXISTS tb_user (
     id BINARY(16) NOT NULL,
-    cpf VARCHAR(11) NOT NULL,
     email VARCHAR(255) NOT NULL,
     nome VARCHAR(255) NOT NULL,
     senha VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY UK_cliente_cpf (cpf),
-    UNIQUE KEY UK_cliente_email (email)
+    UNIQUE KEY UK_user_email (email)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS tb_cliente (
+    id BINARY(16) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY UK_cliente_cpf (cpf)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS tb_produto (
@@ -29,11 +33,7 @@ CREATE TABLE IF NOT EXISTS tb_itemvenda (
 
 CREATE TABLE IF NOT EXISTS tb_vendedor (
     id BINARY(16) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    nome VARCHAR(255) NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY UK_vendedor_email (email)
+    PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS tb_venda (
@@ -50,6 +50,12 @@ CREATE TABLE IF NOT EXISTS tb_venda_itens (
     venda_model_id BINARY(16) NOT NULL,
     itens_id BINARY(16) NOT NULL,
     UNIQUE KEY UK_venda_itens_item (itens_id),
-    CONSTRAINT FK_venda_itens_venda FOREIGN KEY (venda_model_id) REFERENCES tb_venda (id),
-    CONSTRAINT FK_venda_itens_item FOREIGN KEY (itens_id) REFERENCES tb_itemvenda (id)
+    CONSTRAINT FK_venda_itens_item FOREIGN KEY (itens_id) REFERENCES tb_itemvenda (id),
+    CONSTRAINT FK_venda_itens_venda FOREIGN KEY (venda_model_id) REFERENCES tb_venda (id)
 ) ENGINE=InnoDB;
+
+ALTER TABLE tb_cliente
+    ADD CONSTRAINT FK_cliente_user FOREIGN KEY (id) REFERENCES tb_user (id);
+
+ALTER TABLE tb_vendedor
+    ADD CONSTRAINT FK_vendedor_user FOREIGN KEY (id) REFERENCES tb_user (id);

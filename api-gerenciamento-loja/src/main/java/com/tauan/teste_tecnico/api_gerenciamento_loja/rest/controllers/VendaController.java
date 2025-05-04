@@ -24,9 +24,9 @@ public class VendaController {
             tags = {"Venda"}
     )
     @PostMapping
-    public ResponseEntity<String> gerarVenda(@RequestBody @Valid VendaDtoRequest vendaDtoRequestdto) {
-        vendaService.gerarVenda(vendaDtoRequestdto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Venda registrada com sucesso.");
+    public ResponseEntity<VendaDtoResponse> gerarVenda(@RequestBody @Valid VendaDtoRequest vendaDtoRequestdto) {
+        VendaDtoResponse response = vendaService.gerarVenda(vendaDtoRequestdto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @Operation(
             summary = "Buscar Venda",

@@ -10,6 +10,6 @@ public record VendedorDtoRequest(
         @NotBlank(message = "A senha é obrigatoria")String senha
 ) {
     public VendedorModel toModel(){
-        return new VendedorModel(null, nome.toUpperCase(), email.toUpperCase(), senha);
+        return new VendedorModel(null, nome.toUpperCase(), email, senha);
     }
 }

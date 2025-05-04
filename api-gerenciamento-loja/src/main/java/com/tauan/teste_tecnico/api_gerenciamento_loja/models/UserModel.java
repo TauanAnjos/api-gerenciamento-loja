@@ -5,16 +5,30 @@ import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.UserDtoResponse;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "tb_user")
 public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID user_id;
+    private UUID id;
+    @Column(length = 255, nullable = false)
+    private String nome;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "senha", nullable = false)
@@ -24,17 +38,18 @@ public class UserModel implements UserDetails {
     }
 
     public UserModel(UUID user_id, String email, String senha) {
-        this.user_id = user_id;
+        this.id = user_id;
         this.email = email;
         this.senha = senha;
     }
 
-    public UUID getUser_id() {
-        return user_id;
+
+    public UUID getId() {
+        return id;
     }
 
-    public void setUser_id(UUID user_id) {
-        this.user_id = user_id;
+    public void setId(UUID user_id) {
+        this.id = user_id;
     }
 
     public String getEmail() {
@@ -55,7 +70,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of();
     }
 
     @Override
@@ -90,7 +105,7 @@ public class UserModel implements UserDetails {
     public UserDtoRequest toDTO(){
         return new UserDtoRequest(this.email, this.senha);
     }
-    public UserDtoResponse toDtoResponse(){
+    public UserDtoResponse toDtoResponsee(){
         return new UserDtoResponse(this.email);
     }
 }

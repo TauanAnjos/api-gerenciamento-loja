@@ -27,7 +27,7 @@ public class VendaService {
     private VendaRepository vendaRepository;
 
     @Transactional
-    public void gerarVenda(VendaDtoRequest vendaDtoRequestdto) {
+    public VendaDtoResponse gerarVenda(VendaDtoRequest vendaDtoRequestdto) {
         ClienteModel cliente = clienteRepository.findById(vendaDtoRequestdto.clienteId())
                 .orElseThrow(() -> new NotFoundException("Cliente não encontrado."));
 
@@ -55,6 +55,24 @@ public class VendaService {
         venda.setDataVenda(LocalDateTime.now());
         venda.setItens(itensVenda);
         vendaRepository.save(venda);
+        List<ItemVendaDtoResponse> itens = venda.getItens().stream().map(item ->
+                new ItemVendaDtoResponse(
+                        item.getProduto().getNome(),
+                        item.getQuantidade(),
+                        item.getProduto().getValor()
+                )
+        ).toList();
+        double valorTotal = itens.stream()
+                .mapToDouble(item -> item.quantidade() * item.valorUnitario())
+                .sum();
+        return new VendaDtoResponse(
+                venda.getId(),
+                venda.getDataVenda(),
+                venda.getCliente().getNome(),
+                venda.getVendedor().getNome(),
+                itens,
+                valorTotal
+        );
     }
     public VendaDtoResponse buscarVendaPorId(UUID id) {
         VendaModel venda = vendaRepository.findById(id)

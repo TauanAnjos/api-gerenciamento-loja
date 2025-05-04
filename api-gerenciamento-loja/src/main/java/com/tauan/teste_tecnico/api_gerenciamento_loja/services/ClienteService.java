@@ -7,7 +7,9 @@ import com.tauan.teste_tecnico.api_gerenciamento_loja.models.ClienteModel;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.repositories.ClienteRepository;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoRequest;
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.ClienteDtoResponse;
+import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +26,19 @@ public class ClienteService {
         if(clienteRepository.existsByCpf(clienteDtoRequest.cpf())){
             throw new DataConflictException("CPF já cadastrado.");
         }
-        ClienteModel clienteSalvo = clienteRepository.save(clienteDtoRequest.toModel());
+        String senha = encriptPassword(clienteDtoRequest.senha());
+        ClienteDtoRequest request = new ClienteDtoRequest(
+                clienteDtoRequest.nome(),
+                clienteDtoRequest.email(),
+                clienteDtoRequest.cpf(),
+                senha
+        );
+        ClienteModel clienteSalvo = clienteRepository.save(request.toModel());
 
         return clienteSalvo.toDtoResponse();
+    }
+    private String encriptPassword(String senha){
+        return new BCryptPasswordEncoder().encode(senha);
     }
     @Transactional
     public ClienteDtoResponse buscarCliente(UUID id, String email, String cpf){
@@ -35,7 +47,7 @@ public class ClienteService {
         if (id != null){
             clienteExist = clienteRepository.findById(id);
         } else if (email != null) {
-            clienteExist = clienteRepository.findByEmail(email.toUpperCase());
+            clienteExist = clienteRepository.findByEmail(email);
         } else if (cpf != null) {
             clienteExist = clienteRepository.findByCpf(cpf);
         }

@@ -9,6 +9,7 @@ import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoReque
 import com.tauan.teste_tecnico.api_gerenciamento_loja.rest.dtos.VendedorDtoResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +26,18 @@ public class VendedorService {
         if (vendedorRepository.existsByNome(vendedorDtoRequest.nome())){
             throw new DataConflictException("Vendedor já cadastrado");
         }
-        VendedorModel vendedorSalvo = vendedorRepository.save(vendedorDtoRequest.toModel());
+        String senha = encriptPassword(vendedorDtoRequest.senha());
+        VendedorDtoRequest request = new VendedorDtoRequest(
+                vendedorDtoRequest.nome(),
+                vendedorDtoRequest.email(),
+                senha
+        );
+        VendedorModel vendedorSalvo = vendedorRepository.save(request.toModel());
 
         return vendedorSalvo.toDtoResponse();
+    }
+    private String encriptPassword(String senha){
+        return new BCryptPasswordEncoder().encode(senha);
     }
     @Transactional
     public VendedorDtoResponse buscarVendedor(UUID id, String nome){
