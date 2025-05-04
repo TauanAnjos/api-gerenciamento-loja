@@ -21,3 +21,26 @@ Certifique-se de ter o Docker e Docker Compose instalados em sua máquina. Em se
 ```bash
 docker-compose build
 docker-compose up
+```
+## Documentação da API
+A documentação da API está disponível via Swagger, com todos os endpoints organizados e prontos para teste:
+
+🔗 http://localhost:8080/swagger-ui/index.html#/
+
+##Autenticação
+A API utiliza autenticação baseada em JWT (JSON Web Token) com login via e-mail e senha.
+
+Como funciona:
+Envie uma requisição POST para o endpoint de login com o seguinte corpo:
+
+```bash
+{
+  "email": "usuario@example.com",
+  "senha": "suaSenha"
+}
+````
+A resposta conterá um token JWT:
+```bash
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR..."
+}
